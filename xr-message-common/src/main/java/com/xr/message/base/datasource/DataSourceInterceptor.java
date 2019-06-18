@@ -18,7 +18,7 @@ import java.util.Objects;
  * <b>description</b>:数据源动态切换拦截器
  */
 @Aspect
-@Order(Ordered.HIGHEST_PRECEDENCE)
+@Order(Ordered.LOWEST_PRECEDENCE - 100)
 public class DataSourceInterceptor {
 
   protected Logger logger = LoggerFactory.getLogger(getClass());

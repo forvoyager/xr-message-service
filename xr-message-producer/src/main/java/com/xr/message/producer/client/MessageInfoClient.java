@@ -1,4 +1,4 @@
-package com.xr.message.client;
+package com.xr.message.producer.client;
 
 import com.xr.message.common.Constants;
 import com.xr.message.common.controller.IMessageInfoController;
