@@ -41,7 +41,7 @@
   </sql>
 
   <!-- 插入 -->
-  <insert id="insert" parameterType="com.xr.message.common.model.MessageContentModel" keyProperty="user_id">
+  <insert id="insert" parameterType="com.xr.message.common.model.MessageContentModel" keyProperty="msg_id">
     <![CDATA[ INSERT INTO `xr_message_content` ]]>
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="msg_id != null">

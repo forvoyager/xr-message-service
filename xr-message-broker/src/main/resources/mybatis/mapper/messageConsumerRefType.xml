@@ -50,7 +50,7 @@
   </sql>
 
   <!-- 插入 -->
-  <insert id="insert" parameterType="com.xr.message.common.model.MessageConsumerRefTypeModel" keyProperty="user_id">
+  <insert id="insert" parameterType="com.xr.message.common.model.MessageConsumerRefTypeModel" keyProperty="id">
     <![CDATA[ INSERT INTO `xr_message_consumer_ref_type` ]]>
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
