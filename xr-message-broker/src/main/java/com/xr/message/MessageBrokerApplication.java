@@ -3,6 +3,7 @@ package com.xr.message;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ImportResource;
 
 /**
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.ImportResource;
  * <b>time</b>：2019/6/15 0015 13:26 <br>
  * <b>description</b>：
  */
+@EnableDiscoveryClient
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @ImportResource("classpath*:spring.xml")
 public class MessageBrokerApplication {
