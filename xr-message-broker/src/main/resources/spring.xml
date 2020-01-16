@@ -17,6 +17,4 @@
                         http://www.springframework.org/schema/aop/spring-aop.xsd"
        default-lazy-init="true">
 
-  <!-- AOP config -->
-
 </beans>

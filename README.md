@@ -2,9 +2,8 @@
 基于数据库的可靠消息服务
 
 # 主要技术
-MySQL
-Spring Boot 2.0.6.RELEASE
-Spring Cloud Finchley.SR1
+* MySQL
+* Spring Boot 2.1.8.RELEASE
 
 # 模块划分
 

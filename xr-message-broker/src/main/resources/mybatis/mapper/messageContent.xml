@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- author: forvoyager@outlook.com -->
-<!-- time: 2019-06-18 08:05:38 -->
-<!-- description: 消息内容表 数据库操作mapper -->
+<!-- time: 2020-01-15 15:27:59 -->
+<!-- description: 消息内容 数据库操作mapper -->
 <mapper namespace="com.xr.message.mapper.MessageContentMapper">
 
   <sql id="Base_Column_List">
-    `msg_id`, `content`
+    `message_id`, `content`
   </sql>
 
   <!-- 自定义查询条件 -->
@@ -17,16 +17,13 @@
   <!-- 基础查询条件，不允许修改，自定义条件在Custom_Where_Sql中添加 -->
   <sql id="Base_Where_Sql">
     <if test="idList != null and idList.size() > 0">
-      <![CDATA[ AND t.`msg_id` IN ]]>
+      <![CDATA[ AND t.`message_id` IN ]]>
       <foreach collection="idList" item="item" open="(" separator="," close=")">
         <![CDATA[ #{item} ]]>
       </foreach>
     </if>
-    <if test="where_version != null">
-      <![CDATA[ AND t.`version` = #{where_version} ]]>
-    </if>
-    <if test="msg_id != null">
-      <![CDATA[ AND t.`msg_id` = #{msg_id} ]]>
+    <if test="message_id != null">
+      <![CDATA[ AND t.`message_id` = #{message_id} ]]>
     </if>
     <if test="content != null">
       <![CDATA[ AND t.`content` = #{content} ]]>
@@ -41,11 +38,11 @@
   </sql>
 
   <!-- 插入 -->
-  <insert id="insert" parameterType="com.xr.message.common.model.MessageContentModel" keyProperty="msg_id">
-    <![CDATA[ INSERT INTO `xr_message_content` ]]>
+  <insert id="insert" parameterType="com.xr.message.model.MessageContentModel" keyProperty="message_id" useGeneratedKeys="true">
+    <![CDATA[ INSERT INTO xr_message_content ]]>
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="msg_id != null">
-        <![CDATA[ `msg_id`, ]]>
+      <if test="message_id != null">
+        <![CDATA[ `message_id`, ]]>
       </if>
       <if test="content != null">
         <![CDATA[ `content`, ]]>
@@ -53,8 +50,8 @@
     </trim>
     <![CDATA[ VALUES ]]>
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="msg_id != null">
-        <![CDATA[ #{msg_id}, ]]>
+      <if test="message_id != null">
+        <![CDATA[ #{message_id}, ]]>
       </if>
       <if test="content != null">
         <![CDATA[ #{content}, ]]>
@@ -63,49 +60,46 @@
   </insert>
 
   <!-- 批量插入 -->
-  <insert id="insertBatch" parameterType="com.xr.message.common.model.MessageContentModel">
-    <![CDATA[ INSERT INTO `xr_message_content` (`msg_id`, `content`) VALUES ]]>
+  <insert id="insertBatch" parameterType="com.xr.message.model.MessageContentModel">
+    <![CDATA[ INSERT INTO xr_message_content (`message_id`, `content`) VALUES ]]>
     <foreach collection="list" separator="," item="item">
-      (#{item.msg_id}, #{item.content})
+      (#{item.message_id}, #{item.content})
     </foreach>
   </insert>
 
   <!-- 更新（主键/version/create_time不会被更新，version自增1） -->
   <update id="update" parameterType="map">
-    <![CDATA[ UPDATE `xr_message_content` t SET t.`version` = t.`version` + 1, ]]>
+    <![CDATA[ UPDATE xr_message_content t SET t.`version` = t.`version` + 1, ]]>
     <trim suffixOverrides=",">
       <if test="content != null">
         <![CDATA[ t.`content` = #{content}, ]]>
       </if>
     </trim>
     <where>
-      <if test="msg_id != null">
-        <![CDATA[ AND t.`msg_id` = #{msg_id} ]]>
-      </if>
-      <if test="where_version != null">
-        <![CDATA[ AND t.`version` = #{where_version} ]]>
+      <if test="message_id != null">
+        <![CDATA[ AND t.`message_id` = #{message_id} ]]>
       </if>
     </where>
   </update>
 
   <!-- 删除 -->
   <delete id="delete" parameterType="map">
-    <![CDATA[ DELETE t FROM `xr_message_content` t ]]>
+    <![CDATA[ DELETE t FROM xr_message_content t ]]>
     <include refid="Where_Sql"/>
   </delete>
 
   <!-- 查询行数 -->
   <select id="selectCount" parameterType="map" resultType="long">
-    <![CDATA[ SELECT COUNT(*) FROM `xr_message_content` t ]]>
+    <![CDATA[ SELECT COUNT(*) FROM xr_message_content t ]]>
     <include refid="Where_Sql"/>
   </select>
 
   <!-- 查询记录 -->
-  <select id="selectList" parameterType="map" resultType="com.xr.message.common.model.MessageContentModel">
+  <select id="selectList" parameterType="map" resultType="com.xr.message.model.MessageContentModel">
     <include refid="global.pageStart"/>
     <![CDATA[ SELECT ]]>
     <include refid="Base_Column_List"/>
-    <![CDATA[ FROM `xr_message_content` t ]]>
+    <![CDATA[ FROM xr_message_content t ]]>
     <include refid="Where_Sql"/>
     <include refid="global.globalSort"/>
     <include refid="global.pageEnd"/>

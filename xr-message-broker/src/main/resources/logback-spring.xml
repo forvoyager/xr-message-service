@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-  <property name="PROJECT" value="ms_message_service"/>
+  <property name="PROJECT" value="ms_message_broker"/>
   <property name="LOG_PATH" value="/var/log/${PROJECT}"/>
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
