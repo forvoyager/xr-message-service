@@ -12,7 +12,7 @@
   <artifactId>xr-message-common</artifactId>
   <packaging>jar</packaging>
 
-  <name>xr-message-common Maven Webapp</name>
+  <name>xr-message-common</name>
 
   <dependencies>
   </dependencies>

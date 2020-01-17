@@ -9,7 +9,7 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>xr-message-service Maven Webapp</name>
+  <name>xr-message-service</name>
 
   <modules>
     <module>xr-base</module>

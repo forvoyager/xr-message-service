@@ -11,7 +11,7 @@
 
   <artifactId>xr-message-broker</artifactId>
 
-  <name>xr-message-broker Maven Webapp</name>
+  <name>xr-message-broker</name>
 
   <dependencies>
 

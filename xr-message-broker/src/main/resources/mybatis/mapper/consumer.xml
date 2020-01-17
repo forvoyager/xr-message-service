@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- author: forvoyager@outlook.com -->
+<!-- time: 2020-01-17 15:01:49 -->
+<!-- description: 消费者 数据库操作mapper -->
+<mapper namespace="com.xr.message.mapper.ConsumerMapper">
+
+  <sql id="Base_Column_List">
+    `id`, `group`, `name`, `tag_id`, `create_time`
+  </sql>
+
+  <!-- 自定义查询条件 -->
+  <sql id="Custom_Where_Sql">
+
+  </sql>
+
+  <!-- 基础查询条件，不允许修改，自定义条件在Custom_Where_Sql中添加 -->
+  <sql id="Base_Where_Sql">
+    <if test="idList != null and idList.size() > 0">
+      <![CDATA[ AND t.`id` IN ]]>
+      <foreach collection="idList" item="item" open="(" separator="," close=")">
+        <![CDATA[ #{item} ]]>
+      </foreach>
+    </if>
+    <if test="id != null">
+      <![CDATA[ AND t.`id` = #{id} ]]>
+    </if>
+    <if test="group != null">
+      <![CDATA[ AND t.`group` = #{group} ]]>
+    </if>
+    <if test="name != null">
+      <![CDATA[ AND t.`name` = #{name} ]]>
+    </if>
+    <if test="tag_id != null">
+      <![CDATA[ AND t.`tag_id` = #{tag_id} ]]>
+    </if>
+    <if test="create_time != null">
+      <![CDATA[ AND t.`create_time` = #{create_time} ]]>
+    </if>
+  </sql>
+
+  <sql id="Where_Sql">
+    <where>
+      <include refid="Base_Where_Sql"/>
+      <include refid="Custom_Where_Sql"/>
+    </where>
+  </sql>
+
+  <!-- 插入 -->
+  <insert id="insert" parameterType="com.xr.message.model.ConsumerModel" keyProperty="id" useGeneratedKeys="true">
+    <![CDATA[ INSERT INTO xr_consumer ]]>
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        <![CDATA[ `id`, ]]>
+      </if>
+      <if test="group != null">
+        <![CDATA[ `group`, ]]>
+      </if>
+      <if test="name != null">
+        <![CDATA[ `name`, ]]>
+      </if>
+      <if test="tag_id != null">
+        <![CDATA[ `tag_id`, ]]>
+      </if>
+      <if test="create_time != null">
+        <![CDATA[ `create_time`, ]]>
+      </if>
+    </trim>
+    <![CDATA[ VALUES ]]>
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        <![CDATA[ #{id}, ]]>
+      </if>
+      <if test="group != null">
+        <![CDATA[ #{group}, ]]>
+      </if>
+      <if test="name != null">
+        <![CDATA[ #{name}, ]]>
+      </if>
+      <if test="tag_id != null">
+        <![CDATA[ #{tag_id}, ]]>
+      </if>
+      <if test="create_time != null">
+        <![CDATA[ #{create_time}, ]]>
+      </if>
+    </trim>
+  </insert>
+
+  <!-- 批量插入 -->
+  <insert id="insertBatch" parameterType="com.xr.message.model.ConsumerModel">
+    <![CDATA[ INSERT INTO xr_consumer (`id`, `group`, `name`, `tag_id`, `create_time`) VALUES ]]>
+    <foreach collection="list" separator="," item="item">
+      (#{item.id}, #{item.group}, #{item.name}, #{item.tag_id}, #{item.create_time})
+    </foreach>
+  </insert>
+
+  <!-- 更新（主键/version/create_time不会被更新，version自增1） -->
+  <update id="update" parameterType="map">
+    <![CDATA[ UPDATE xr_consumer t SET t.`version` = t.`version` + 1, ]]>
+    <trim suffixOverrides=",">
+      <if test="group != null">
+        <![CDATA[ t.`group` = #{group}, ]]>
+      </if>
+      <if test="name != null">
+        <![CDATA[ t.`name` = #{name}, ]]>
+      </if>
+      <if test="tag_id != null">
+        <![CDATA[ t.`tag_id` = #{tag_id}, ]]>
+      </if>
+    </trim>
+    <where>
+      <if test="id != null">
+        <![CDATA[ AND t.`id` = #{id} ]]>
+      </if>
+    </where>
+  </update>
+
+  <!-- 删除 -->
+  <delete id="delete" parameterType="map">
+    <![CDATA[ DELETE t FROM xr_consumer t ]]>
+    <include refid="Where_Sql"/>
+  </delete>
+
+  <!-- 查询行数 -->
+  <select id="selectCount" parameterType="map" resultType="long">
+    <![CDATA[ SELECT COUNT(*) FROM xr_consumer t ]]>
+    <include refid="Where_Sql"/>
+  </select>
+
+  <!-- 查询记录 -->
+  <select id="selectList" parameterType="map" resultType="com.xr.message.model.ConsumerModel">
+    <include refid="global.pageStart"/>
+    <![CDATA[ SELECT ]]>
+    <include refid="Base_Column_List"/>
+    <![CDATA[ FROM xr_consumer t ]]>
+    <include refid="Where_Sql"/>
+    <include refid="global.globalSort"/>
+    <include refid="global.pageEnd"/>
+  </select>
+
+</mapper>

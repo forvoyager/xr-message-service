@@ -54,9 +54,4 @@ public class MessageController {
     messageProcessor.cancel(messageIdDto.getMessageIdList());
     return ResultDto.success("取消发送成功");
   }
-
-  @RequestMapping("/pull")
-  public void pull() throws Exception{
-
-  }
 }

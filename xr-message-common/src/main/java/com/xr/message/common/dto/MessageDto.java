@@ -22,7 +22,7 @@ public class MessageDto implements Serializable{
    */
   private int type;
   /**
-   * 消息内容 json格式
+   * 消息内容
    */
   private String data;
 
