@@ -23,13 +23,13 @@ CREATE TABLE `xr_message_info` (
   KEY `idx_type` (`type_id`),
   KEY `idx_producer` (`producer_id`),
   KEY `idx_status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消息记录表';
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COMMENT='消息记录表';
 
 CREATE TABLE `xr_message_content` (
   `msg_id` BIGINT NOT NULL DEFAULT 0 COMMENT '消息id',
   `content` MEDIUMTEXT NOT NULL COMMENT '消息内容',
   PRIMARY KEY (`msg_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT = '消息内容表';
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COMMENT = '消息内容表';
 
 CREATE TABLE `xr_message_producer` (
   `id` smallint(6) NOT NULL AUTO_INCREMENT COMMENT '生产者id',
@@ -41,7 +41,7 @@ CREATE TABLE `xr_message_producer` (
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unq_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消息生产者';
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COMMENT='消息生产者';
 
 CREATE TABLE `xr_message_consumer` (
   `id` smallint(6) NOT NULL AUTO_INCREMENT COMMENT '消费者id',
@@ -53,7 +53,7 @@ CREATE TABLE `xr_message_consumer` (
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unq_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消息消费者';
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COMMENT='消息消费者';
 
 CREATE TABLE `xr_message_type` (
   `id` smallint(6) NOT NULL DEFAULT '0' COMMENT '类型id',
@@ -66,7 +66,7 @@ CREATE TABLE `xr_message_type` (
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unq_code` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消息类型';
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COMMENT='消息类型';
 
 CREATE TABLE `xr_message_consumer_ref_type` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -76,7 +76,7 @@ CREATE TABLE `xr_message_consumer_ref_type` (
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT = '消费者与消息类型关联关系';
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COMMENT = '消费者与消息类型关联关系';
 
 
 
@@ -88,7 +88,7 @@ CREATE TABLE `xr_topic` (
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unq_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消息主题';
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COMMENT='消息主题';
 
 CREATE TABLE `xr_tag` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'tag id',
@@ -101,7 +101,7 @@ CREATE TABLE `xr_tag` (
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unq_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消息tag';
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COMMENT='消息tag';
 
 CREATE TABLE `xr_message` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '消息id',
@@ -115,23 +115,43 @@ CREATE TABLE `xr_message` (
   PRIMARY KEY (`id`),
   KEY `idx_topic_tag` (`topic_id`,`tag_id`),
   KEY `idx_status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消息记录';
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COMMENT='消息记录';
 
 CREATE TABLE `xr_message_content` (
   `message_id` BIGINT NOT NULL DEFAULT 0 COMMENT '消息id',
   `content` MEDIUMTEXT NOT NULL COMMENT '消息内容',
   PRIMARY KEY (`message_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT = '消息内容';
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COMMENT = '消息内容';
 
--- CREATE TABLE `xr_message_consume` (
---   `tag_id` BIGINT NOT NULL DEFAULT 0 COMMENT 'tag id',
---   `offset_message_id` BIGINT NOT NULL DEFAULT 0 COMMENT 'message id',
---   `version` tinyint(4) NOT NULL DEFAULT '0' COMMENT '版本号',
---   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
---   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后更新时间',
---   PRIMARY KEY (`tag_id`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT = '消息消费记录';
---
+CREATE TABLE `xr_consumer` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '消费者id',
+  `group` varchar(45) NOT NULL COMMENT '消费者分组 当多个不同的消费者消费同一个tag的消息时，需使用不同的group',
+  `name` varchar(100) NOT NULL COMMENT '消费者名字，如：{IP}@{JVM PID}',
+  `tag_id` BIGINT NOT NULL DEFAULT '0' COMMENT '消费的tag id',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态 0有效 1无效',
+  `version` tinyint(4) NOT NULL DEFAULT '0' COMMENT '版本号',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COMMENT = '消费者';
+
+CREATE TABLE `xr_message_consume` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `message_id` BIGINT NOT NULL DEFAULT 0 COMMENT '消息id',
+  `consumer_id` BIGINT NOT NULL DEFAULT 0 COMMENT '消费者id',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态 0已投递 1消费成功 2消费失败 3投递失败',
+  `version` tinyint(4) NOT NULL DEFAULT '0' COMMENT '版本号',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COMMENT = '消息投递记录';
+
+CREATE TABLE `xr_message_consume_unq` (
+  `message_id` BIGINT NOT NULL DEFAULT 0 COMMENT '消息id',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  PRIMARY KEY (`message_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COMMENT = '消息处理记录';
+
 -- CREATE TABLE `xr_message_subscribe` (
 --   `id` BIGINT NOT NULL DEFAULT '0' COMMENT '主键id',
 --   `instance_id` varchar(120) NOT NULL DEFAULT '' COMMENT '实例id，建议：{IP}_{APPLICATION_NAME}',
@@ -142,6 +162,6 @@ CREATE TABLE `xr_message_content` (
 --   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后更新时间',
 --   PRIMARY KEY (`id`),
 --   UNIQUE KEY `unq_instance_id` (`instance_id`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消息订阅记录';
+-- ) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COMMENT='消息订阅记录';
 --
 
