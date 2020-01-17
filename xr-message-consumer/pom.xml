@@ -12,9 +12,19 @@
   <artifactId>xr-message-consumer</artifactId>
   <packaging>jar</packaging>
 
-  <name>xr-message-consumer Maven Webapp</name>
+  <name>xr-message-consumer</name>
 
   <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
