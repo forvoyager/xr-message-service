@@ -1,6 +1,8 @@
 package com.xr.message.service.impl;
 
+import com.xr.base.common.enums.Cluster;
 import com.xr.base.common.util.DateUtils;
+import com.xr.base.common.util.Utils;
 import com.xr.base.jdbc.service.impl.BaseServiceImpl;
 import com.xr.message.mapper.TagMapper;
 import com.xr.message.model.TagModel;
@@ -21,7 +23,14 @@ public class TagServiceImpl extends BaseServiceImpl<TagMapper, TagModel> impleme
 
   @Override
   public TagModel insert(String name, Long topic_id) throws Exception {
-    TagModel tagModel = new TagModel();
+    // 检查是否已经创建了
+    TagModel tagModel = this.selectOne(Utils.newHashMap(TagModel.TOPIC_ID, topic_id, TagModel.NAME, name), Cluster.master);
+    if(tagModel != null){
+      return tagModel;
+    }
+
+    // 不存在，创建tag
+    tagModel = new TagModel();
     tagModel.setName(name);
     tagModel.setDescription(name);
     tagModel.setTopic_id(topic_id);

@@ -105,4 +105,18 @@
     <include refid="global.pageEnd"/>
   </select>
 
+  <!-- 查询消息内容 -->
+  <select id="selectAvailableMessage" parameterType="map" resultType="com.xr.message.model.MessageContentModel">
+    <![CDATA[
+      SELECT
+      mc.`message_id`,
+      mc.`content`
+      FROM xr_message m LEFT JOIN xr_message_content mc ON m.id = mc.message_id
+    ]]>
+    <where>
+      <![CDATA[ m.`status` = 1 AND m.topic_id = #{topic_id} AND m.tag_id = #{tag_id} AND m.id >= #{offset_message_id} ]]>
+    </where>
+    <![CDATA[ ORDER BY m.id ASC LIMIT #{pagesize} ]]>
+  </select>
+
 </mapper>

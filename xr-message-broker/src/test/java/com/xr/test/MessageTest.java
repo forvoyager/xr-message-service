@@ -1,3 +1,5 @@
+package com.xr.test;
+
 import com.xr.base.common.util.HttpUtils;
 import org.junit.Test;
 
@@ -21,9 +23,9 @@ public class MessageTest {
     params.put("topic", "test_topic");
     params.put("tag", "test_tag");
     params.put("type", "0");
-    for(int i = 0; i<3; i++){
+    for(int i = 0; i<30; i++){
       params.put("data", "TEST:"+System.currentTimeMillis());
-      get("/message/send", params);
+      post("/message/send", params);
     }
   }
 
@@ -43,6 +45,27 @@ public class MessageTest {
     messageIdList.add(666L);
     params.put("messageIdList", messageIdList);
     post("/message/cancel", params);
+  }
+
+  @Test
+  public void consumer_signup() throws Exception{
+    params.put("topic", "test_topic");
+    params.put("tag", "test_tag");
+    params.put("group", "test_group");
+    params.put("instance", "192.168.11.81@321");
+    params.put("name", this.getClass().getName());
+    get("/consumer/signup", params);
+  }
+
+  @Test
+  public void pull() throws Exception{
+    for(int i =0;i<1;i++ ){
+      params.put("consumer_id", 1);
+      params.put("offset_type", 0);
+      params.put("offset", 0);
+      params.put("size", 3);
+      get("/consumer/pull", params);
+    }
   }
 
   private String get(String uri, Map params) throws Exception{

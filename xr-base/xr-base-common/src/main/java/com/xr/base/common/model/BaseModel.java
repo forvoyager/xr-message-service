@@ -30,8 +30,9 @@ public class BaseModel implements Serializable {
   /**
    * 条件 版本号 （@Transient 不序列化）
    */
-  protected Integer where_version;
+  protected Long where_version;
 
+  @Transient
   public Long getCreate_time() {
     return create_time;
   }
@@ -40,6 +41,7 @@ public class BaseModel implements Serializable {
     this.create_time = create_time;
   }
 
+  @Transient
   public Long getUpdate_time() {
     return update_time;
   }
@@ -48,6 +50,7 @@ public class BaseModel implements Serializable {
     this.update_time = update_time;
   }
 
+  @Transient
   public Long getVersion() {
     return version;
   }
@@ -57,11 +60,11 @@ public class BaseModel implements Serializable {
   }
 
   @Transient
-  public Integer getWhere_version() {
+  public Long getWhere_version() {
     return where_version;
   }
 
-  public void setWhere_version(Integer where_version) {
+  public void setWhere_version(Long where_version) {
     this.where_version = where_version;
   }
 }

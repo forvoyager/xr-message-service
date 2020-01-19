@@ -20,7 +20,7 @@ public class TagModel extends BaseModel {
    */
   private Long id;
   /**
-   * tag 名字
+   * tag 名字，name + topic_id唯一确定一个tag
    */
   private String name;
   /**
@@ -28,13 +28,9 @@ public class TagModel extends BaseModel {
    */
   private String description;
   /**
-   * topic id
+   * topic id，name + topic_id唯一确定一个tag
    */
   private Long topic_id;
-  /**
-   * 最新被消费的消息id
-   */
-  private Long offset_message_id;
 
   public Long getId() {
     return this.id;
@@ -69,15 +65,6 @@ public class TagModel extends BaseModel {
 
   public TagModel setTopic_id(Long topic_id) {
     this.topic_id = topic_id;
-    return this;
-  }
-
-  public Long getOffset_message_id() {
-    return this.offset_message_id;
-  }
-
-  public TagModel setOffset_message_id(Long offset_message_id) {
-    this.offset_message_id = offset_message_id;
     return this;
   }
 

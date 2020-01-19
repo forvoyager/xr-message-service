@@ -6,7 +6,7 @@
 <mapper namespace="com.xr.message.mapper.TagMapper">
 
   <sql id="Base_Column_List">
-    `id`, `name`, `description`, `topic_id`, `offset_message_id`, `version`, `create_time`, `update_time`
+    `id`, `name`, `description`, `topic_id`, `version`, `create_time`, `update_time`
   </sql>
 
   <!-- 自定义查询条件 -->
@@ -33,9 +33,6 @@
     </if>
     <if test="topic_id != null">
       <![CDATA[ AND t.`topic_id` = #{topic_id} ]]>
-    </if>
-    <if test="offset_message_id != null">
-      <![CDATA[ AND t.`offset_message_id` = #{offset_message_id} ]]>
     </if>
     <if test="where_version != null">
       <![CDATA[ AND t.`version` = #{where_version} ]]>
@@ -71,9 +68,6 @@
       <if test="topic_id != null">
         <![CDATA[ `topic_id`, ]]>
       </if>
-      <if test="offset_message_id != null">
-        <![CDATA[ `offset_message_id`, ]]>
-      </if>
       <if test="version != null">
         <![CDATA[ `version`, ]]>
       </if>
@@ -98,9 +92,6 @@
       <if test="topic_id != null">
         <![CDATA[ #{topic_id}, ]]>
       </if>
-      <if test="offset_message_id != null">
-        <![CDATA[ #{offset_message_id}, ]]>
-      </if>
       <if test="version != null">
         <![CDATA[ #{version}, ]]>
       </if>
@@ -115,9 +106,9 @@
 
   <!-- 批量插入 -->
   <insert id="insertBatch" parameterType="com.xr.message.model.TagModel">
-    <![CDATA[ INSERT INTO xr_tag (`id`, `name`, `description`, `topic_id`, `offset_message_id`, `version`, `create_time`, `update_time`) VALUES ]]>
+    <![CDATA[ INSERT INTO xr_tag (`id`, `name`, `description`, `topic_id`, `version`, `create_time`, `update_time`) VALUES ]]>
     <foreach collection="list" separator="," item="item">
-      (#{item.id}, #{item.name}, #{item.description}, #{item.topic_id}, #{item.offset_message_id}, #{item.version}, #{item.create_time}, #{item.update_time})
+      (#{item.id}, #{item.name}, #{item.description}, #{item.topic_id}, #{item.version}, #{item.create_time}, #{item.update_time})
     </foreach>
   </insert>
 
@@ -133,9 +124,6 @@
       </if>
       <if test="topic_id != null">
         <![CDATA[ t.`topic_id` = #{topic_id}, ]]>
-      </if>
-      <if test="offset_message_id != null">
-        <![CDATA[ t.`offset_message_id` = #{offset_message_id}, ]]>
       </if>
       <if test="update_time != null">
         <![CDATA[ t.`update_time` = #{update_time}, ]]>

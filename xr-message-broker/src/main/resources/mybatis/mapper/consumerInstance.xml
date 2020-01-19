@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- author: forvoyager@outlook.com -->
-<!-- time: 2020-01-19 13:07:39 -->
-<!-- description: 消费者 数据库操作mapper -->
-<mapper namespace="com.xr.message.mapper.ConsumerMapper">
+<!-- time: 2020-01-19 10:34:15 -->
+<!-- description: 消费者实例信息 数据库操作mapper -->
+<mapper namespace="com.xr.message.mapper.ConsumerInstanceMapper">
 
   <sql id="Base_Column_List">
-    `id`, `topic_id`, `tag_id`, `group`, `offset_message_id`, `version`, `create_time`, `update_time`
+    `id`, `consumer_id`, `instance`, `name`, `status`, `version`, `create_time`, `update_time`
   </sql>
 
   <!-- 自定义查询条件 -->
@@ -25,17 +25,17 @@
     <if test="id != null">
       <![CDATA[ AND t.`id` = #{id} ]]>
     </if>
-    <if test="topic_id != null">
-      <![CDATA[ AND t.`topic_id` = #{topic_id} ]]>
+    <if test="consumer_id != null">
+      <![CDATA[ AND t.`consumer_id` = #{consumer_id} ]]>
     </if>
-    <if test="tag_id != null">
-      <![CDATA[ AND t.`tag_id` = #{tag_id} ]]>
+    <if test="instance != null">
+      <![CDATA[ AND t.`instance` = #{instance} ]]>
     </if>
-    <if test="group != null">
-      <![CDATA[ AND t.`group` = #{group} ]]>
+    <if test="name != null">
+      <![CDATA[ AND t.`name` = #{name} ]]>
     </if>
-    <if test="offset_message_id != null">
-      <![CDATA[ AND t.`offset_message_id` = #{offset_message_id} ]]>
+    <if test="status != null">
+      <![CDATA[ AND t.`status` = #{status} ]]>
     </if>
     <if test="where_version != null">
       <![CDATA[ AND t.`version` = #{where_version} ]]>
@@ -56,23 +56,23 @@
   </sql>
 
   <!-- 插入 -->
-  <insert id="insert" parameterType="com.xr.message.model.ConsumerModel" keyProperty="id" useGeneratedKeys="true">
-    <![CDATA[ INSERT INTO xr_consumer ]]>
+  <insert id="insert" parameterType="com.xr.message.model.ConsumerInstanceModel" keyProperty="id" useGeneratedKeys="true">
+    <![CDATA[ INSERT INTO xr_consumer_instance ]]>
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         <![CDATA[ `id`, ]]>
       </if>
-      <if test="topic_id != null">
-        <![CDATA[ `topic_id`, ]]>
+      <if test="consumer_id != null">
+        <![CDATA[ `consumer_id`, ]]>
       </if>
-      <if test="tag_id != null">
-        <![CDATA[ `tag_id`, ]]>
+      <if test="instance != null">
+        <![CDATA[ `instance`, ]]>
       </if>
-      <if test="group != null">
-        <![CDATA[ `group`, ]]>
+      <if test="name != null">
+        <![CDATA[ `name`, ]]>
       </if>
-      <if test="offset_message_id != null">
-        <![CDATA[ `offset_message_id`, ]]>
+      <if test="status != null">
+        <![CDATA[ `status`, ]]>
       </if>
       <if test="version != null">
         <![CDATA[ `version`, ]]>
@@ -89,17 +89,17 @@
       <if test="id != null">
         <![CDATA[ #{id}, ]]>
       </if>
-      <if test="topic_id != null">
-        <![CDATA[ #{topic_id}, ]]>
+      <if test="consumer_id != null">
+        <![CDATA[ #{consumer_id}, ]]>
       </if>
-      <if test="tag_id != null">
-        <![CDATA[ #{tag_id}, ]]>
+      <if test="instance != null">
+        <![CDATA[ #{instance}, ]]>
       </if>
-      <if test="group != null">
-        <![CDATA[ #{group}, ]]>
+      <if test="name != null">
+        <![CDATA[ #{name}, ]]>
       </if>
-      <if test="offset_message_id != null">
-        <![CDATA[ #{offset_message_id}, ]]>
+      <if test="status != null">
+        <![CDATA[ #{status}, ]]>
       </if>
       <if test="version != null">
         <![CDATA[ #{version}, ]]>
@@ -114,28 +114,28 @@
   </insert>
 
   <!-- 批量插入 -->
-  <insert id="insertBatch" parameterType="com.xr.message.model.ConsumerModel">
-    <![CDATA[ INSERT INTO xr_consumer (`id`, `topic_id`, `tag_id`, `group`, `offset_message_id`, `version`, `create_time`, `update_time`) VALUES ]]>
+  <insert id="insertBatch" parameterType="com.xr.message.model.ConsumerInstanceModel">
+    <![CDATA[ INSERT INTO xr_consumer_instance (`id`, `consumer_id`, `instance`, `name`, `status`, `version`, `create_time`, `update_time`) VALUES ]]>
     <foreach collection="list" separator="," item="item">
-      (#{item.id}, #{item.topic_id}, #{item.tag_id}, #{item.group}, #{item.offset_message_id}, #{item.version}, #{item.create_time}, #{item.update_time})
+      (#{item.id}, #{item.consumer_id}, #{item.instance}, #{item.name}, #{item.status}, #{item.version}, #{item.create_time}, #{item.update_time})
     </foreach>
   </insert>
 
   <!-- 更新（主键/version/create_time不会被更新，version自增1） -->
   <update id="update" parameterType="map">
-    <![CDATA[ UPDATE xr_consumer t SET t.`version` = t.`version` + 1, ]]>
+    <![CDATA[ UPDATE xr_consumer_instance t SET t.`version` = t.`version` + 1, ]]>
     <trim suffixOverrides=",">
-      <if test="topic_id != null">
-        <![CDATA[ t.`topic_id` = #{topic_id}, ]]>
+      <if test="consumer_id != null">
+        <![CDATA[ t.`consumer_id` = #{consumer_id}, ]]>
       </if>
-      <if test="tag_id != null">
-        <![CDATA[ t.`tag_id` = #{tag_id}, ]]>
+      <if test="instance != null">
+        <![CDATA[ t.`instance` = #{instance}, ]]>
       </if>
-      <if test="group != null">
-        <![CDATA[ t.`group` = #{group}, ]]>
+      <if test="name != null">
+        <![CDATA[ t.`name` = #{name}, ]]>
       </if>
-      <if test="offset_message_id != null">
-        <![CDATA[ t.`offset_message_id` = #{offset_message_id}, ]]>
+      <if test="status != null">
+        <![CDATA[ t.`status` = #{status}, ]]>
       </if>
       <if test="update_time != null">
         <![CDATA[ t.`update_time` = #{update_time}, ]]>
@@ -153,22 +153,22 @@
 
   <!-- 删除 -->
   <delete id="delete" parameterType="map">
-    <![CDATA[ DELETE t FROM xr_consumer t ]]>
+    <![CDATA[ DELETE t FROM xr_consumer_instance t ]]>
     <include refid="Where_Sql"/>
   </delete>
 
   <!-- 查询行数 -->
   <select id="selectCount" parameterType="map" resultType="long">
-    <![CDATA[ SELECT COUNT(*) FROM xr_consumer t ]]>
+    <![CDATA[ SELECT COUNT(*) FROM xr_consumer_instance t ]]>
     <include refid="Where_Sql"/>
   </select>
 
   <!-- 查询记录 -->
-  <select id="selectList" parameterType="map" resultType="com.xr.message.model.ConsumerModel">
+  <select id="selectList" parameterType="map" resultType="com.xr.message.model.ConsumerInstanceModel">
     <include refid="global.pageStart"/>
     <![CDATA[ SELECT ]]>
     <include refid="Base_Column_List"/>
-    <![CDATA[ FROM xr_consumer t ]]>
+    <![CDATA[ FROM xr_consumer_instance t ]]>
     <include refid="Where_Sql"/>
     <include refid="global.globalSort"/>
     <include refid="global.pageEnd"/>

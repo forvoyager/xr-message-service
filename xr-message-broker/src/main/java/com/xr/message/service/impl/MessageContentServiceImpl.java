@@ -1,10 +1,13 @@
 package com.xr.message.service.impl;
 
+import com.xr.base.common.util.Utils;
 import com.xr.base.jdbc.service.impl.BaseServiceImpl;
 import com.xr.message.mapper.MessageContentMapper;
 import com.xr.message.model.MessageContentModel;
 import com.xr.message.service.IMessageContentService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <b>author</b>: forvoyager@outlook.com
@@ -16,5 +19,15 @@ public class MessageContentServiceImpl extends BaseServiceImpl<MessageContentMap
   @Override
   protected String getPrimaryKeyName() {
     return "message_id";
+  }
+
+  @Override
+  public List<MessageContentModel> selectAvailableMessage(Long topic_id, Long tag_id, Long offset_message_id, Integer rows) throws Exception {
+    return this.baseMapper.selectAvailableMessage(Utils.newHashMap(
+            "topic_id", topic_id,
+            "tag_id", tag_id,
+            "offset_message_id", offset_message_id,
+            "pagesize", rows
+    ));
   }
 }

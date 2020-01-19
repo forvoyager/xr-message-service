@@ -92,10 +92,9 @@ CREATE TABLE `xr_topic` (
 
 CREATE TABLE `xr_tag` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'tag id',
-  `name` varchar(45) NOT NULL COMMENT 'tag 名字',
+  `name` varchar(45) NOT NULL COMMENT 'tag 名字，name + topic_id唯一确定一个tag',
   `description` varchar(100) NOT NULL COMMENT 'tag 描述',
-  `topic_id` BIGINT NOT NULL DEFAULT '0' COMMENT 'topic id',
-  `offset_message_id` BIGINT NOT NULL DEFAULT 0 COMMENT '最新被消费的消息id',
+  `topic_id` BIGINT NOT NULL DEFAULT '0' COMMENT 'topic id，name + topic_id唯一确定一个tag',
   `version` BIGINT NOT NULL DEFAULT '0' COMMENT '版本号',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后更新时间',
@@ -125,15 +124,29 @@ CREATE TABLE `xr_message_content` (
 
 CREATE TABLE `xr_consumer` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '消费者id',
-  `group` varchar(45) NOT NULL COMMENT '消费者分组 当多个不同的消费者消费同一个tag的消息时，需使用不同的group',
-  `name` varchar(100) NOT NULL COMMENT '消费者名字，如：{IP}@{JVM PID}',
+  `topic_id` BIGINT NOT NULL DEFAULT '0' COMMENT 'topic id',
   `tag_id` BIGINT NOT NULL DEFAULT '0' COMMENT '消费的tag id',
+  `group` varchar(45) NOT NULL COMMENT '消费者分组 当多个不同的消费者消费同一个tag的消息时，需使用不同的group',
+  `offset_message_id` BIGINT NOT NULL DEFAULT 0 COMMENT '下一条需要被消费的消息id',
+  `version` int(11) NOT NULL DEFAULT '0' COMMENT '版本号',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后更新时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_tag_id` (`tag_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COMMENT = '消费者';
+
+CREATE TABLE `xr_consumer_instance` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '实例id',
+  `consumer_id` BIGINT NOT NULL COMMENT '消费者id',
+  `instance` varchar(100) NOT NULL COMMENT '消费者实例，如：{IP}@{JVM PID}',
+  `name` varchar(100) NOT NULL COMMENT '消费者名字，如：class name',
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态 0有效 1无效',
   `version` tinyint(4) NOT NULL DEFAULT '0' COMMENT '版本号',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后更新时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COMMENT = '消费者';
+  PRIMARY KEY (`id`),
+  KEY `idx_consumer_id` (`consumer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COMMENT = '消费者实例信息';
 
 CREATE TABLE `xr_message_consume` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键id',
