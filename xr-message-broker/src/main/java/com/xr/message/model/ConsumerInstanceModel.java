@@ -24,7 +24,7 @@ public class ConsumerInstanceModel extends BaseModel {
    */
   private Long consumer_id;
   /**
-   * 消费者实例，如：{IP}@{JVM PID}
+   * 消费者实例{IP}@{JVM PID}
    */
   private String instance;
   /**

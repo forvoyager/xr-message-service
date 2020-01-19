@@ -21,6 +21,10 @@ public class ConsumerProperties {
    * 为false表示关闭，消息不会自动推送，需要手动拉取。
    */
   private boolean pushEnable = true;
+  /**
+   * 消费者一次拉取的消息数，默认10
+   */
+  private int pullRows = 10;
 
   public String getNameServerAddress() {
     return nameServerAddress;
@@ -37,6 +41,15 @@ public class ConsumerProperties {
 
   public ConsumerProperties setPushEnable(boolean pushEnable) {
     this.pushEnable = pushEnable;
+    return this;
+  }
+
+  public int getPullRows() {
+    return pullRows;
+  }
+
+  public ConsumerProperties setPullRows(int pullRows) {
+    this.pullRows = pullRows;
     return this;
   }
 }

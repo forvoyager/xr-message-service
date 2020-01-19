@@ -25,6 +25,18 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>com.xr</groupId>
+      <artifactId>xr-base-common</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.xr</groupId>
+      <artifactId>xr-message-common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 
   <build>

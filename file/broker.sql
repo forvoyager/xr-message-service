@@ -138,7 +138,7 @@ CREATE TABLE `xr_consumer` (
 CREATE TABLE `xr_consumer_instance` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '实例id',
   `consumer_id` BIGINT NOT NULL COMMENT '消费者id',
-  `instance` varchar(100) NOT NULL COMMENT '消费者实例，如：{IP}@{JVM PID}',
+  `instance` varchar(100) NOT NULL COMMENT '消费者实例{IP}@{JVM PID}',
   `name` varchar(100) NOT NULL COMMENT '消费者名字，如：class name',
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态 0有效 1无效',
   `version` tinyint(4) NOT NULL DEFAULT '0' COMMENT '版本号',

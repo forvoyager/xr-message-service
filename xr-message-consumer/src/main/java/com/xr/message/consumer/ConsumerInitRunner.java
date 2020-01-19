@@ -1,7 +1,10 @@
 package com.xr.message.consumer;
 
+import com.xr.message.consumer.service.impl.ConsumerProcessor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * <b>author</b>: forvoyager@outlook.com
@@ -10,8 +13,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ConsumerInitRunner implements CommandLineRunner {
+
+  @Resource
+  private ConsumerProcessor consumerProcessor;
+
   @Override
   public void run(String... args) throws Exception {
-    // TODO
+    // 执行初始化
+    consumerProcessor.init();
+
+    // 开始拉取消息进行消费
+    consumerProcessor.start();
   }
 }
