@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * <b>description</b>: 消费者信息验证处理<br>
  */
 @Component
-public class ConsumerValidatorProcessor implements BeanPostProcessor {
+public class ConsumerValidator implements BeanPostProcessor {
   @Override
   public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 
@@ -35,7 +35,7 @@ public class ConsumerValidatorProcessor implements BeanPostProcessor {
     // 检查注解参数是否正确
     this.notEmpty(ann.topic(), "消费者："+name+"，topic不能为空。");
     this.notEmpty(ann.tag(), "消费者："+name+"，tag不能为空。");
-    this.notEmpty(ann.consumerGroup(), "消费者："+name+"，consumer group不能为空。");
+    this.notEmpty(ann.group(), "消费者："+name+"，consumer group不能为空。");
 
     return bean;
   }

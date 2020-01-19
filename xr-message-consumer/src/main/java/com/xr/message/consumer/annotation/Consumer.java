@@ -30,5 +30,5 @@ public @interface Consumer {
    * 标识消费者分组，注：当多个不同的消费者消费同一个tag的消息时，需使用不同的group
    * @return
    */
-  String consumerGroup() default "";
+  String group() default "";
 }
