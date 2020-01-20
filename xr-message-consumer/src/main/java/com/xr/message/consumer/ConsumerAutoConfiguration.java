@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackageClasses = {ConsumerAutoConfiguration.class})
 @EnableConfigurationProperties(ConsumerProperties.class)
 // false时不启动消费者
-@ConditionalOnProperty(prefix = ConsumerProperties.PREFIX, name = "enable", matchIfMissing = true)
+@ConditionalOnProperty(prefix = ConsumerProperties.PREFIX, name = "enable", matchIfMissing = false)
 public class ConsumerAutoConfiguration {
   public ConsumerAutoConfiguration(){}
 }

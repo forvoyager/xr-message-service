@@ -12,9 +12,9 @@ public class ConsumerProperties {
 
   public static final String PREFIX = "xr.message";
   /**
-   * 是否启动消费者自动配置，默认启动
+   * 是否启动消费者自动配置，默认不启动
    */
-  private boolean enable = true;
+  private boolean enable = false;
   /**
    * 消息服务地址
    */
