@@ -3,7 +3,7 @@ package com.xr.message.controller;
 import com.xr.base.common.dto.ResultDto;
 import com.xr.message.common.dto.MessageDto;
 import com.xr.message.dto.MessageIdDto;
-import com.xr.message.service.MessageProcessor;
+import com.xr.message.processor.MessageProcessor;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

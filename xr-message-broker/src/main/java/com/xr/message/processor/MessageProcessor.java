@@ -1,4 +1,4 @@
-package com.xr.message.service;
+package com.xr.message.processor;
 
 import com.xr.base.common.enums.Cluster;
 import com.xr.base.common.util.AssertUtils;
@@ -10,6 +10,9 @@ import com.xr.message.common.enums.MessageType;
 import com.xr.message.model.MessageModel;
 import com.xr.message.model.TagModel;
 import com.xr.message.model.TopicModel;
+import com.xr.message.service.IMessageService;
+import com.xr.message.service.ITagService;
+import com.xr.message.service.ITopicService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

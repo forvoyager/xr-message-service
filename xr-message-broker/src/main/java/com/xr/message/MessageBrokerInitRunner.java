@@ -1,6 +1,6 @@
 package com.xr.message;
 
-import com.xr.message.service.MessageProcessor;
+import com.xr.message.processor.MessageProcessor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
