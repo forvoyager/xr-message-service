@@ -1,4 +1,4 @@
-package com.xr.message.consumer.service.impl;
+package com.xr.message.consumer.processor;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.xr.base.common.EnvUtils;
@@ -10,7 +10,7 @@ import com.xr.base.common.util.Utils;
 import com.xr.message.common.dto.PullMessageDto;
 import com.xr.message.consumer.ConsumerProperties;
 import com.xr.message.consumer.annotation.Consumer;
-import com.xr.message.consumer.service.IMessageCallbackService;
+import com.xr.message.consumer.service.IMessageConsumerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -27,10 +27,10 @@ import java.util.concurrent.*;
 /**
  * <b>author</b>: forvoyager@outlook.com
  * <b>time</b>: 2020-01-19 16:06:00 <br>
- * <b>description</b>: 消费者处理<br>
+ * <b>description</b>: 消费处理（推送模式）<br>
  */
 @Component
-public class ConsumerProcessor implements DisposableBean {
+public class PushConsumerProcessor implements DisposableBean {
 
   private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -54,22 +54,24 @@ public class ConsumerProcessor implements DisposableBean {
   /**
    * 当前jvm中所有的消费者
    */
-  private List<IMessageCallbackService> consumerList = new ArrayList<>();
+  private List<IMessageConsumerService> consumerList;
   /**
    * 消费者及ID map关系
    * Map<consumer_id, 消费者>
    */
-  private final Map<Long, IMessageCallbackService> consumerMap;
+  private final Map<Long, IMessageConsumerService> consumerMap;
 
   @Autowired
   private ConsumerProperties consumerProperties;
 
-  public ConsumerProcessor(){
+  public PushConsumerProcessor(){
+    this.available = false;
     this.scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(new XrThreadFactory("XrMessageScheduledThread_"));
     // max(当前CPU数, n) 最少n个线程
     int corePoolSize = Math.max(Runtime.getRuntime().availableProcessors(), 3);
     this.processExecutorService = new ThreadPoolExecutor(corePoolSize, 10, 15, TimeUnit.MINUTES, new LinkedBlockingQueue<Runnable>(), new XrThreadFactory("XrMessageProcessThread_"));
-    this.consumerMap = new HashMap<Long, IMessageCallbackService>();
+    this.consumerList = new ArrayList<>();
+    this.consumerMap = new HashMap<Long, IMessageConsumerService>();
   }
 
   /**
@@ -78,7 +80,7 @@ public class ConsumerProcessor implements DisposableBean {
    */
   public void init() throws Exception{
 
-    logger.info("init consumer info, start...");
+    logger.info("init consumer, start...");
 
     if(consumerList == null){ return; }
 
@@ -86,7 +88,7 @@ public class ConsumerProcessor implements DisposableBean {
     Class callbackClazz = null;
     Consumer consumerAnn = null;
     String consumerName = null;
-    for(IMessageCallbackService consumer : consumerList){
+    for(IMessageConsumerService consumer : consumerList){
       callbackClazz = consumer.getClass();
       consumerName = callbackClazz.getName();
       consumerAnn = (Consumer) callbackClazz.getAnnotation(Consumer.class);
@@ -110,7 +112,7 @@ public class ConsumerProcessor implements DisposableBean {
     // 消费者初始化完成，可以拉取消息了
     this.available = true;
 
-    logger.info("init consumer info, success...");
+    logger.info("init consumer, success...");
   }
 
   /**
@@ -119,12 +121,7 @@ public class ConsumerProcessor implements DisposableBean {
    */
   public void start() throws Exception{
     // 从此刻开始，以每5s一次的频率拉取消息
-    this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-      @Override
-      public void run() {
-        pullMessage();
-      }
-    }, 0, 5, TimeUnit.SECONDS);
+    this.scheduledExecutorService.scheduleAtFixedRate( ()->{pullMessage();}, 0, 5, TimeUnit.SECONDS);
   }
 
   /**
@@ -136,12 +133,15 @@ public class ConsumerProcessor implements DisposableBean {
       return;
     }
 
-    ResultDto<List<PullMessageDto>> result = null;
-    IMessageCallbackService consumer = null;
-    for(Map.Entry<Long, IMessageCallbackService> entry : consumerMap.entrySet()){
-      consumer = entry.getValue();
+    if(consumerMap.size() == 0){
+      logger.warn("there is no any available consumer, skip pull message!");
+      return;
+    }
+
+    for(Map.Entry<Long, IMessageConsumerService> entry : consumerMap.entrySet()){
+      IMessageConsumerService consumer = entry.getValue();
       try {
-        result = this.sendRequest("/consumer/pull", Utils.newHashMap(
+        ResultDto<List<PullMessageDto>> result = this.sendRequest("/consumer/pull", Utils.newHashMap(
                 "consumer_id", entry.getKey(),
                 "offset_type", 0,
                 "offset", 0,
@@ -150,10 +150,26 @@ public class ConsumerProcessor implements DisposableBean {
         result.assertSuccess();
 
         // 处理消息
-
+        this.processExecutorService.submit(()->{processMessage(consumer, result.getData());});
 
       }catch (Exception e){
         logger.warn("消费者：{}，拉取消息失败，原因：{}。", consumer.getClass().getName(), e.getMessage());
+      }
+    }
+  }
+
+  /**
+   * 处理消息
+   * @param consumer 消费者
+   * @param messages 需要处理的消息
+   */
+  private void processMessage(IMessageConsumerService consumer, List<PullMessageDto> messages){
+    for(PullMessageDto message : messages){
+      try {
+//        consumer.onMessage()
+        logger.info("consumer:{}, process message:{}, success.", consumer.getClass().getName(), message.getMessage_id());
+      }catch (Exception e){
+
       }
     }
   }
@@ -165,14 +181,14 @@ public class ConsumerProcessor implements DisposableBean {
     return resultDto;
   }
 
-  @Autowired
-  public ConsumerProcessor setConsumerList(List<IMessageCallbackService> consumerList) {
+  @Autowired(required = false)
+  public PushConsumerProcessor setConsumerList(List<IMessageConsumerService> consumerList) {
     this.consumerList = consumerList;
     return this;
   }
 
   @PostConstruct
-  public void setInstance(){
+  public void setInstance() throws Exception{
     this.instance = EnvUtils.getIP()+"@"+EnvUtils.getPid();
   }
 

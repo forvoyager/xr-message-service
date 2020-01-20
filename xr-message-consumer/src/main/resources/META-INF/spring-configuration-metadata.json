@@ -2,7 +2,7 @@
   "hints": [],
   "groups": [
     {
-      "name": "com.xr.message.consumer",
+      "name": "xr.message",
       "type": "com.xr.message.consumer.ConsumerProperties",
       "sourceType": "com.xr.message.consumer.ConsumerProperties"
     }
@@ -10,17 +10,31 @@
   "properties": [
     {
       "sourceType": "com.xr.message.consumer.ConsumerProperties",
+      "defaultValue": true,
+      "name": "xr.message.enable",
+      "description": "是否启动消息消费者服务",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.xr.message.consumer.ConsumerProperties",
       "defaultValue": "localhost:9999",
-      "name": "xr.message.name.server.address",
+      "name": "xr.message.name_server_address",
       "description": "消息服务name server地址",
       "type": "java.lang.String"
     },
     {
       "sourceType": "com.xr.message.consumer.ConsumerProperties",
       "defaultValue": true,
-      "name": "xr.message.push.enable",
+      "name": "xr.message.push_model-enable",
       "description": "是否启动消息推送",
       "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.xr.message.consumer.ConsumerProperties",
+      "defaultValue": 10,
+      "name": "xr.message.pull_rows",
+      "description": "每次消息拉取个数",
+      "type": "java.lang.Integer"
     }
   ]
 }

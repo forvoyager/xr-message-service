@@ -1,6 +1,6 @@
 package com.xr.message.consumer;
 
-import com.xr.message.consumer.service.impl.ConsumerProcessor;
+import com.xr.message.consumer.processor.PushConsumerProcessor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -15,14 +15,15 @@ import javax.annotation.Resource;
 public class ConsumerInitRunner implements CommandLineRunner {
 
   @Resource
-  private ConsumerProcessor consumerProcessor;
+  private PushConsumerProcessor pushConsumerProcessor;
 
   @Override
   public void run(String... args) throws Exception {
+
     // 执行初始化
-    consumerProcessor.init();
+    pushConsumerProcessor.init();
 
     // 开始拉取消息进行消费
-    consumerProcessor.start();
+    pushConsumerProcessor.start();
   }
 }

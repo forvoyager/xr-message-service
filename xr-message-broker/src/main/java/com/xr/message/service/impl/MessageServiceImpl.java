@@ -92,6 +92,10 @@ public class MessageServiceImpl extends BaseServiceImpl<MessageMapper, MessageMo
               consumer.getTopic_id(), consumer.getTag_id(), consumer.getOffset_message_id(), size);
 
       int rows = contentModels.size();
+
+      // 抛出异常，回滚上面的更新操作
+      //AssertUtils.isTrue(rows > 0,"暂时没有需要处理的消息");
+
       if( rows > 0){
         Long next_consume_message_id = null;
 

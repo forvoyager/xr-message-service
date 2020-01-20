@@ -1,7 +1,8 @@
 package com.xr.message.consumer;
 
 import com.xr.message.consumer.annotation.Consumer;
-import com.xr.message.consumer.service.IMessageCallbackService;
+import com.xr.message.consumer.service.impl.NoTransactionMessageConsumer;
+import com.xr.message.consumer.service.impl.TransactionMessageConsumer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
@@ -20,36 +21,40 @@ public class ConsumerValidator implements BeanPostProcessor {
 
     // 获取Consumer注解
     Consumer ann = bean.getClass().getAnnotation(Consumer.class);
-    // 获取IMessageCallbackService回调接口
-    Class clazz = this.getInterface(bean.getClass(), IMessageCallbackService.class);
+    // 是否是合法的consumer bean
+    boolean isConsumerBean = this.isValidConsumerBean(bean);
 
     // 没有添加注解和回调接口（非消费者）
-    if(ann == null && clazz == null){ return bean; }
+    if(ann == null && !isConsumerBean){ return bean; }
 
     String name = bean.getClass().getName();
     // 消费者必须添加注解 && 实现回调接口
-    if(ann == null || clazz == null){
-      throw new RuntimeException("消费者："+name+"，需添加@Consumer注解并实现IMessageCallbackService回调接口。");
+    if(ann == null || !isConsumerBean){
+      throw new RuntimeException("消费者："+name+"，需添加@Consumer注解并继承NoTransactionMessageConsumer/TransactionMessageConsumer。");
     }
 
     // 检查注解参数是否正确
     this.notEmpty(ann.topic(), "消费者："+name+"，topic不能为空。");
     this.notEmpty(ann.tag(), "消费者："+name+"，tag不能为空。");
-    this.notEmpty(ann.group(), "消费者："+name+"，consumer group不能为空。");
+    this.notEmpty(ann.group(), "消费者："+name+"，group不能为空。");
 
     return bean;
   }
 
   /**
-   * 从bean中获取clazz
+   * 判断是否是合法的consumer bean(继承NoTransactionMessageConsumer 或者 TransactionMessageConsumer)
    *
    * @param bean
-   * @param clazz
    * @return
    */
-  private Class getInterface(Class bean, Class clazz){
-    // TODO
-    return null;
+  private boolean isValidConsumerBean(Object bean){
+    if(bean instanceof NoTransactionMessageConsumer){
+      return true;
+    }
+    if(bean instanceof TransactionMessageConsumer){
+      return true;
+    }
+    return false;
   }
 
   private void notEmpty(String value, String message){

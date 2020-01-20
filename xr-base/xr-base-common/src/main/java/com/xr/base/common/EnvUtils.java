@@ -2,11 +2,10 @@ package com.xr.base.common;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
-import java.net.Inet4Address;
-import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
+import java.util.regex.Pattern;
 
 /**
  * <b>author</b>: forvoyager@outlook.com
@@ -14,6 +13,13 @@ import java.util.Enumeration;
  * <b>description</b>: <br>
  */
 public final class EnvUtils {
+
+  public static final String ANYHOST = "0.0.0.0";
+
+  public static final String LOCALHOST = "127.0.0.1";
+
+  public static final Pattern IP_PATTERN = Pattern.compile("\\d{1,3}(\\.\\d{1,3}){3,5}$");
+
   private EnvUtils(){}
 
   /**
@@ -48,93 +54,43 @@ public final class EnvUtils {
    * 获取本机ip
    * @return
    */
-  public static String getIP() {
-    try {
-      Enumeration allNetInterfaces = NetworkInterface.getNetworkInterfaces();
-      InetAddress ip = null;
-      byte[] internalIP = null;
+  public static String getIP() throws Exception {
+    InetAddress localAddress = InetAddress.getLocalHost();
+    if (isValidAddress(localAddress)) {
+      return localAddress.getHostAddress();
+    }
 
-      while(allNetInterfaces.hasMoreElements()) {
-        NetworkInterface netInterface = (NetworkInterface)allNetInterfaces.nextElement();
-        Enumeration addresses = netInterface.getInetAddresses();
+    // 获取本机所有网卡
+    Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+    if (interfaces != null) {
+      NetworkInterface network = null;
+      while (interfaces.hasMoreElements()) {
+        network = interfaces.nextElement();
 
-        while(true) {
-          ip = (InetAddress)addresses.nextElement();
-          if(ip == null){continue;}
-
-          byte[] ipByte;
-          if (ip instanceof Inet4Address) {
-            ipByte = ip.getAddress();
-            if (ipByte.length == 4 && ipCheck(ipByte)) {
-              if (!isInternalIP(ipByte)) {
-                return ipToIPv4Str(ipByte);
-              }
-
-              if (internalIP == null) {
-                internalIP = ipByte;
-              }
+        // 获取网卡绑定的IP地址
+        Enumeration<InetAddress> addresses = network.getInetAddresses();
+        if (addresses != null) {
+          while (addresses.hasMoreElements()) {
+            InetAddress address = addresses.nextElement();
+            if (isValidAddress(address)) {
+              return address.getHostAddress();
             }
-          } else if (ip instanceof Inet6Address) {
-            // todo v6地址暂不处理
           }
         }
       }
-
-      if (internalIP != null) {
-        return ipToIPv4Str(internalIP);
-      } else {
-        throw new RuntimeException("Can not get local ip");
-      }
-    } catch (Exception var6) {
-      throw new RuntimeException("Can not get local ip", var6);
     }
+
+    throw new RuntimeException("no available IP address.");
   }
 
-  private static boolean isInternalIP(byte[] ip) {
-    if (ip.length != 4) {
-      throw new RuntimeException("illegal ipv4 bytes");
-    } else if (ip[0] == 10) {
-      return true;
-    } else {
-      if (ip[0] == -84) {
-        if (ip[1] >= 16 && ip[1] <= 31) {
-          return true;
-        }
-      } else if (ip[0] == -64 && ip[1] == -88) {
-        return true;
-      }
-
+  private static boolean isValidAddress(InetAddress address) {
+    if (address == null || address.isLoopbackAddress()) {
       return false;
     }
-  }
-
-  private static boolean ipCheck(byte[] ip) {
-    if (ip.length != 4) {
-      throw new RuntimeException("illegal ipv4 bytes");
-    } else if (ip[0] >= 1 && ip[0] <= 126) {
-      if (ip[1] == 1 && ip[2] == 1 && ip[3] == 1) {
-        return false;
-      } else {
-        return ip[1] != 0 || ip[2] != 0 || ip[3] != 0;
-      }
-    } else if (ip[0] >= -128 && ip[0] <= -65) {
-      if (ip[2] == 1 && ip[3] == 1) {
-        return false;
-      } else {
-        return ip[2] != 0 || ip[3] != 0;
-      }
-    } else if (ip[0] >= -64 && ip[0] <= -33) {
-      if (ip[3] == 1) {
-        return false;
-      } else {
-        return ip[3] != 0;
-      }
-    } else {
-      return false;
-    }
-  }
-
-  private static String ipToIPv4Str(byte[] ip) {
-    return ip.length != 4 ? null : (ip[0] & 255) + "." + (ip[1] & 255) + "." + (ip[2] & 255) + "." + (ip[3] & 255);
+    String name = address.getHostAddress();
+    return (name != null
+            && !ANYHOST.equals(name)
+            && !LOCALHOST.equals(name)
+            && IP_PATTERN.matcher(name).matches());
   }
 }

@@ -5,7 +5,7 @@ package com.xr.message.consumer.service;
  * <b>time</b>: 2020-01-17 15:49:00 <br>
  * <b>description</b>: 消息回调接口<br>
  */
-public interface IMessageCallbackService<T> {
+public interface IMessageConsumerService<T> {
 
   /**
    * 有消息时触发操作

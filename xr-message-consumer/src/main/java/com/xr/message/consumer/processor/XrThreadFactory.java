@@ -1,4 +1,4 @@
-package com.xr.message.consumer.service.impl;
+package com.xr.message.consumer.processor;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;

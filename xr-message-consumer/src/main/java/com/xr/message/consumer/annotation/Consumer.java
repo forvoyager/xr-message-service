@@ -1,5 +1,7 @@
 package com.xr.message.consumer.annotation;
 
+import org.springframework.stereotype.Component;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,6 +12,7 @@ import java.lang.annotation.Target;
  * <b>time</b>: 2020-01-17 15:58:00 <br>
  * <b>description</b>: 消费者注解，消息消费者用此注解标注
  */
+@Component
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Consumer {

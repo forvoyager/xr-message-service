@@ -1,7 +1,7 @@
 package com.test;
 
 import com.xr.message.consumer.annotation.Consumer;
-import com.xr.message.consumer.service.IMessageCallbackService;
+import com.xr.message.consumer.service.IMessageConsumerService;
 
 import java.util.Map;
 
@@ -11,7 +11,7 @@ import java.util.Map;
  * <b>description</b>: <br>
  */
 @Consumer(topic = "TEST_TOPIC", tag = "TEST_TAG", group = "TEST_GROUP")
-public class TestMessageCallback implements IMessageCallbackService<Map<String, Long>> {
+public class TestMessageConsumer implements IMessageConsumerService<Map<String, Long>> {
   @Override
   public boolean onMessage(Map<String, Long> message) throws Exception {
     return false;
