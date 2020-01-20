@@ -18,7 +18,7 @@ public class ConsumerProperties {
   /**
    * 消息服务地址
    */
-  private String nameServerAddress = "localhost:9999";
+  private String nameServerAddress = "http://localhost:9999";
   /**
    * 是否启动消息自动推送模式，默认启动。
    * 为false表示关闭，消息不会自动推送，需要手动拉取。

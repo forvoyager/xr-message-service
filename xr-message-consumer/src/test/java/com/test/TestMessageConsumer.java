@@ -1,7 +1,7 @@
 package com.test;
 
 import com.xr.message.consumer.annotation.Consumer;
-import com.xr.message.consumer.service.IMessageConsumerService;
+import com.xr.message.consumer.service.impl.NoTransactionMessageConsumer;
 
 import java.util.Map;
 
@@ -11,9 +11,9 @@ import java.util.Map;
  * <b>description</b>: <br>
  */
 @Consumer(topic = "TEST_TOPIC", tag = "TEST_TAG", group = "TEST_GROUP")
-public class TestMessageConsumer implements IMessageConsumerService<Map<String, Long>> {
+public class TestMessageConsumer extends NoTransactionMessageConsumer<Map<String, Long>> {
   @Override
-  public boolean onMessage(Map<String, Long> message) throws Exception {
+  protected boolean process(long message_id, Map<String, Long> data) throws Exception {
     return false;
   }
 }

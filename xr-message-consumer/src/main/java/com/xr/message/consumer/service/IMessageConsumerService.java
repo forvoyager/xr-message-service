@@ -9,10 +9,11 @@ public interface IMessageConsumerService<T> {
 
   /**
    * 有消息时触发操作
-   * @param message
+   * @param message_id 消息id
+   * @param data 消息内容
    * @return true消费成功 false消费失败（抛出异常也是失败）
    * @throws Exception
    */
-  boolean onMessage(T message) throws Exception;
+  boolean onMessage(long message_id, T data) throws Exception;
 
 }

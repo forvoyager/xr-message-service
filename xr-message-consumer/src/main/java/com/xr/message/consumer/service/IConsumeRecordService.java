@@ -10,26 +10,29 @@ public interface IConsumeRecordService {
   /**
    * 写入消费记录
    * @param message_id 消息id
+   * @param consumer_id 消费者id
    * @param data 消息内容
    * @return 消费记录id（如果有）
    * @throws Exception
    */
-  long insert(long message_id, Object data) throws Exception;
+  long insert(long message_id, long consumer_id, Object data) throws Exception;
 
   /**
    * 更具消息id删除消费记录
-   * @param message_id
+   * @param message_id 消息id
+   * @param consumer_id 消费者id
    * @return 返回删除的条数
    * @throws Exception
    */
-  int deleteByMessageId(long message_id) throws Exception;
+  int delete(long message_id, long consumer_id) throws Exception;
 
   /**
    * 根据消息id查询消费记录是否存证
-   * @param message_id
+   * @param message_id 消息id
+   * @param consumer_id 消费者id
    * @return true存证（成功消费了） false不存在（还没用消费 或 消费失败了）
    * @throws Exception
    */
-  boolean checkExistedByMessageId(long message_id) throws Exception;
+  boolean checkExisted(long message_id, long consumer_id) throws Exception;
 
 }

@@ -17,7 +17,7 @@
     },
     {
       "sourceType": "com.xr.message.consumer.ConsumerProperties",
-      "defaultValue": "localhost:9999",
+      "defaultValue": "http://localhost:9999",
       "name": "xr.message.name_server_address",
       "description": "消息服务name server地址",
       "type": "java.lang.String"

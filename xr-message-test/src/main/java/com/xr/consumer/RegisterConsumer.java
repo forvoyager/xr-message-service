@@ -11,9 +11,8 @@ import com.xr.message.consumer.service.impl.NoTransactionMessageConsumer;
 @Consumer(topic = "TEST_TOPIC", tag = "TEST_TAG", group = "TEST_GROUP")
 public class RegisterConsumer extends NoTransactionMessageConsumer<String> {
   @Override
-  public boolean onMessage(String message) throws Exception {
-
-    System.out.println("处理消息："+message);
+  protected boolean process(long message_id, String data) throws Exception {
+    System.out.println("处理消息："+data);
 
     return true;
   }

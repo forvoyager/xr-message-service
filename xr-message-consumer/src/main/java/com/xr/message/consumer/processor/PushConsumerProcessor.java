@@ -167,6 +167,7 @@ public class PushConsumerProcessor implements DisposableBean {
     for(PullMessageDto message : messages){
       try {
 //        consumer.onMessage()
+        // todo ((ParameterizedType)(consumer.getClass().getGenericSuperclass())).getActualTypeArguments()[0]
         logger.info("consumer:{}, process message:{}, success.", consumer.getClass().getName(), message.getMessage_id());
       }catch (Exception e){
 

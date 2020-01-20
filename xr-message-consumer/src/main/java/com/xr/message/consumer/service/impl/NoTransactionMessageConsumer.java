@@ -1,8 +1,11 @@
 package com.xr.message.consumer.service.impl;
 
+import com.xr.message.consumer.service.IConsumeRecordService;
 import com.xr.message.consumer.service.IMessageConsumerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.annotation.Resource;
 
 /**
  * <b>author</b>: forvoyager@outlook.com
@@ -13,4 +16,31 @@ public abstract class NoTransactionMessageConsumer <T> implements IMessageConsum
 
   protected Logger logger = LoggerFactory.getLogger(getClass());
 
+  private long consumer_id;
+
+  @Resource
+  private IConsumeRecordService consumeRecordService;
+
+  @Override
+  public boolean onMessage(long message_id, T data) throws Exception {
+
+    // 处理消息（根据返回结果判断是否成功）
+    boolean success = this.process(message_id, data);
+    if(success){
+      try {
+        // 成功了，记录消息消费记录
+        consumeRecordService.insert(message_id, this.consumer_id, data);
+      }catch (Exception e){
+        // 出错，重试 TODO
+      }
+    }
+
+    return success;
+  }
+
+  protected abstract boolean process(long message_id, T data) throws Exception;
+
+  public long getConsumer_id() {
+    return consumer_id;
+  }
 }

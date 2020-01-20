@@ -1,8 +1,7 @@
 package com.xr.message.consumer;
 
 import com.xr.message.consumer.annotation.Consumer;
-import com.xr.message.consumer.service.impl.NoTransactionMessageConsumer;
-import com.xr.message.consumer.service.impl.TransactionMessageConsumer;
+import com.xr.message.consumer.service.IMessageConsumerService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
@@ -21,8 +20,8 @@ public class ConsumerValidator implements BeanPostProcessor {
 
     // 获取Consumer注解
     Consumer ann = bean.getClass().getAnnotation(Consumer.class);
-    // 是否是合法的consumer bean
-    boolean isConsumerBean = this.isValidConsumerBean(bean);
+    // 是否实现了消费者接口
+    boolean isConsumerBean = this.isConsumerBean(bean);
 
     // 没有添加注解和回调接口（非消费者）
     if(ann == null && !isConsumerBean){ return bean; }
@@ -47,11 +46,8 @@ public class ConsumerValidator implements BeanPostProcessor {
    * @param bean
    * @return
    */
-  private boolean isValidConsumerBean(Object bean){
-    if(bean instanceof NoTransactionMessageConsumer){
-      return true;
-    }
-    if(bean instanceof TransactionMessageConsumer){
+  private boolean isConsumerBean(Object bean){
+    if(bean instanceof IMessageConsumerService){
       return true;
     }
     return false;
