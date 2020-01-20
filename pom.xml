@@ -17,6 +17,7 @@
     <module>xr-message-broker</module>
     <module>xr-message-producer</module>
     <module>xr-message-consumer</module>
+    <module>xr-message-test</module>
   </modules>
 
   <parent>
