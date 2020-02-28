@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 /**
  * <b>author</b>: forvoyager@outlook.com
  * <b>time</b>: 2020-02-27 18:06:00 <br>
- * <b>description</b>: <br>
+ * <b>description</b>: 消息消费记录 服务实现<br>
  */
 @Component
 public class ConsumeRecordServiceImpl implements IConsumeRecordService {
@@ -24,7 +24,7 @@ public class ConsumeRecordServiceImpl implements IConsumeRecordService {
 
   @Transactional
   @Override
-  public long insert(long message_id, long consumer_id, Object data) throws Exception {
+  public long insert(long message_id, Object data) throws Exception {
     MessageConsumeUnqModel model = new MessageConsumeUnqModel();
     model.setMessage_id(message_id);
     model.setCreate_time(DateUtils.currentTimeInSecond());
@@ -34,7 +34,7 @@ public class ConsumeRecordServiceImpl implements IConsumeRecordService {
 
   @Transactional
   @Override
-  public int delete(long message_id, long consumer_id) throws Exception {
+  public int delete(long message_id) throws Exception {
     if(messageConsumeUnqService.deleteById(message_id) != 1){
       Utils.throwsBizException("删除消息消费记录失败，消息ID:"+message_id);
     }
@@ -43,7 +43,7 @@ public class ConsumeRecordServiceImpl implements IConsumeRecordService {
   }
 
   @Override
-  public boolean checkExisted(long message_id, long consumer_id) throws Exception {
+  public boolean checkExisted(long message_id) throws Exception {
     return messageConsumeUnqService.selectById(message_id, Cluster.master) == null ? false : true;
   }
 }
