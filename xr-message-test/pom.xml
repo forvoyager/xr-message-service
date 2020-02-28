@@ -28,6 +28,12 @@
       <artifactId>xr-message-consumer</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.xr</groupId>
+      <artifactId>xr-base-jdbc-starter</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
   <build>
