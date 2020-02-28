@@ -7,13 +7,13 @@ package com.xr.message.common.enums;
  */
 public enum MessageType {
 
-  // 0打头，非事务消息
-  simple(0, "简单消息"),
+  // 1打头，非事务消息
+  simple(10, "简单消息"),
 
-  // 1打头，事务消息
-  transaction(10, "事务消息"),
-  delay(11, "延迟消息"),
-  sequence(12, "（严格）顺序消息"),
+  // 2打头，事务消息
+  transaction(20, "事务消息"),
+  delay(21, "延迟消息"),
+  sequence(22, "（严格）顺序消息"),
   ;
 
   private int code;
