@@ -1,16 +1,12 @@
 package com.xr.message.producer;
 
-import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Configuration;
 
 /**
  * <b>author</b>：forvoyager@outlook.com
- * <b>time</b>：2019/6/18 0018 18:12 <br>
- * <b>description</b>：
+ * <b>time</b>：2020/02/27 10:41:00 <br>
+ * <b>description</b>： 消息生产者自动配置
  */
-@EnableDiscoveryClient
 @Configuration
-@MapperScan
 public class MessageProducerAutoConfiguration {
 }

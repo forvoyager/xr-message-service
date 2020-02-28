@@ -1,19 +1,7 @@
 {
   "hints": [],
   "groups": [
-    {
-      "name": "ms.base.data.source",
-      "type": "com.xr.message.base.datasource.MsDataSourceAutoConfiguration",
-      "sourceType": "com.xr.message.base.datasource.MsDataSourceAutoConfiguration"
-    }
   ],
   "properties": [
-    {
-      "sourceType": "com.xr.message.base.datasource.MsDataSourceAutoConfiguration",
-      "defaultValue": true,
-      "name": "ms.base.data.source.enabled",
-      "description": "数据源是否加载",
-      "type": "java.lang.Boolean"
-    }
   ]
 }
