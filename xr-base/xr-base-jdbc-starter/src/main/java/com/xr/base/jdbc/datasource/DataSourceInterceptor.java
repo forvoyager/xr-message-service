@@ -18,7 +18,7 @@ import java.util.Objects;
  * <b>time</b>: 2020-01-15 17:05:00 <br>
  * <b>description</b>:数据源动态切换拦截器
  */
-@Component
+//@Component
 @Aspect
 @Order(Ordered.LOWEST_PRECEDENCE - 100)
 public class DataSourceInterceptor {
