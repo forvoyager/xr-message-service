@@ -1,5 +1,6 @@
 package com.xr.message.consumer.service.impl;
 
+import com.xr.base.common.util.Utils;
 import com.xr.message.consumer.service.IConsumeRecordService;
 import com.xr.message.consumer.service.IMessageConsumerService;
 import org.slf4j.Logger;
@@ -23,6 +24,10 @@ public abstract class NoTransactionMessageConsumer <T> implements IMessageConsum
 
   @Override
   public boolean onMessage(long message_id, T data) throws Exception {
+    // 检查消息是否已经处理过了，防止重复消费
+    if(consumeRecordService.checkExisted(message_id, this.consumer_id)){
+      Utils.throwsBizException("消息已被成功消费，不可重复处理，消息ID:"+message_id);
+    }
 
     // 处理消息（根据返回结果判断是否成功）
     boolean success = this.process(message_id, data);

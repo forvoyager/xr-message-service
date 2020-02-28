@@ -3,10 +3,7 @@ package com.xr.message.consumer.processor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.xr.base.common.EnvUtils;
 import com.xr.base.common.dto.ResultDto;
-import com.xr.base.common.util.AssertUtils;
-import com.xr.base.common.util.HttpUtils;
-import com.xr.base.common.util.JsonUtils;
-import com.xr.base.common.util.Utils;
+import com.xr.base.common.util.*;
 import com.xr.message.common.dto.PullMessageDto;
 import com.xr.message.consumer.ConsumerProperties;
 import com.xr.message.consumer.annotation.Consumer;
@@ -18,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -147,7 +145,10 @@ public class PushConsumerProcessor implements DisposableBean {
                 "offset", 0,
                 "size", consumerProperties.getPullRows()
         ), new TypeReference<ResultDto<List<PullMessageDto>>>(){});
+        // 成功返回
         result.assertSuccess();
+        // 没有需要处理的消息则跳过
+        if(CollectionUtils.isEmpty(result.getData())){continue;}
 
         // 处理消息
         this.processExecutorService.submit(()->{processMessage(consumer, result.getData());});
@@ -166,11 +167,16 @@ public class PushConsumerProcessor implements DisposableBean {
   private void processMessage(IMessageConsumerService consumer, List<PullMessageDto> messages){
     for(PullMessageDto message : messages){
       try {
-//        consumer.onMessage()
-        // todo ((ParameterizedType)(consumer.getClass().getGenericSuperclass())).getActualTypeArguments()[0]
+        // ((ParameterizedType)(consumer.getClass().getGenericSuperclass())).getActualTypeArguments()[0]
+        Class consumerMessageType = (Class)(((ParameterizedType)(consumer.getClass().getGenericSuperclass())).getActualTypeArguments()[0]);
+        if("String".equals(consumerMessageType.getSimpleName())){
+          consumer.onMessage(message.getMessage_id(), message.getContent());
+        } else {
+          consumer.onMessage(message.getMessage_id(), JsonUtils.parseObject(message.getContent(), consumerMessageType));
+        }
         logger.info("consumer:{}, process message:{}, success.", consumer.getClass().getName(), message.getMessage_id());
       }catch (Exception e){
-
+        logger.error("消息处理失败，原因：", e);
       }
     }
   }
